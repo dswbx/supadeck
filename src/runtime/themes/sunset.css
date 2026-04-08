@@ -1,0 +1,10 @@
+:root {
+  --color-background: #120f1d;
+  --color-foreground: #f9f4ec;
+  --color-muted: #d9c7b2;
+  --color-accent: #ff9f68;
+  --color-border: rgba(249, 244, 236, 0.14);
+  --color-code-bg: rgba(249, 244, 236, 0.08);
+  --font-sans: "Sora", "Avenir Next", sans-serif;
+  --font-display: "Clash Display", "Trebuchet MS", sans-serif;
+}

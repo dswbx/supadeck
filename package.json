@@ -1,0 +1,55 @@
+{
+  "name": "supaslides",
+  "version": "0.1.0",
+  "description": "Zero-config MDX presentations with hot reload and PDF export.",
+  "type": "module",
+  "bin": {
+    "supaslides": "./dist/cli/index.js"
+  },
+  "exports": {
+    ".": "./dist/cli/index.js",
+    "./components": "./dist/runtime/public-components.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node ./scripts/copy-static.mjs",
+    "dev": "tsx ./src/cli/index.ts",
+    "export": "tsx ./src/cli/index.ts export",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "keywords": [
+    "mdx",
+    "slides",
+    "presentations",
+    "vite",
+    "tailwind"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@base-ui-components/react": "^1.0.0-rc.0",
+    "@mdx-js/rollup": "^3.1.0",
+    "@tailwindcss/vite": "^4.1.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "gray-matter": "^4.0.3",
+    "playwright": "^1.54.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "remark-mdx": "^3.1.0",
+    "remark-parse": "^11.0.0",
+    "tailwindcss": "^4.1.0",
+    "unified": "^11.0.5",
+    "vite": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.4"
+  }
+}

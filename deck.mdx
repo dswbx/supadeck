@@ -1,0 +1,49 @@
+---
+title: Supaslides
+theme: default
+aspectRatio: 16:9
+showSlideNumbers: true
+transition: fade
+---
+
+import ExampleCard from "./ExampleCard.tsx";
+import { Callout, Columns, Disclosure } from "supaslides/components";
+
+# Supaslides
+
+Write presentations in one `deck.mdx` file.
+
+<Callout tone="accent">
+   Edit this file and the deck will hot reload automatically.
+</Callout>
+
+---
+
+## Custom components
+
+<Columns
+   left={
+      <ExampleCard title="Local import">Your own React component.</ExampleCard>
+   }
+   right={
+      <Disclosure title="Built on Base UI">
+         Supalides ships small presentation-ready primitives too.
+      </Disclosure>
+   }
+/>
+
+---
+
+## Export
+
+-  Run `npx supaslides export`
+-  The deck is rendered as HTML first
+-  Then exported to PDF with headless Chromium
+
+---
+
+## Export2 asdf
+
+-  Run `npx supaslides export`
+-  The deck is rendered as HTML first
+-  Then exported to PDF with headless Chromium
