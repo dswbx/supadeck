@@ -6,7 +6,8 @@ const MODULE_EXTENSIONS = ['.tsx', '.ts', '.jsx', '.js'];
 
 const BUILTIN_THEME_STEMS: Record<string, string> = {
   default: './themes/default/index',
-  sunset: './themes/sunset/index'
+  sunset: './themes/sunset/index',
+  supabase: './themes/supabase/index'
 };
 
 export function resolveRuntimeModulePath(baseUrl: string, stem: string): string {

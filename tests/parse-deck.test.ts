@@ -36,6 +36,35 @@ import Thing from './Thing.tsx'
     expect(deck.slides).toHaveLength(1);
     expect(deck.slides[0].body).toContain('Untitled slide');
   });
+
+  it('normalizes and clamps sections from frontmatter', () => {
+    const deck = parseDeck(`---
+title: Sections
+sections:
+  - label: Intro
+    start: 1
+    end: 1
+  - label: Closing
+    start: 3
+    end: 9
+---
+
+# One
+
+---
+
+# Two
+
+---
+
+# Three
+`);
+
+    expect(deck.config.sections).toEqual([
+      { label: 'Intro', start: 0, end: 0 },
+      { label: 'Closing', start: 2, end: 2 }
+    ]);
+  });
 });
 
 describe('normalizeDeckConfig', () => {
@@ -45,7 +74,20 @@ describe('normalizeDeckConfig', () => {
       theme: 'sunset',
       aspectRatio: '16:9',
       showSlideNumbers: true,
-      transition: 'fade'
+      transition: 'fade',
+      sections: undefined
     });
+  });
+
+  it('drops malformed section entries', () => {
+    expect(
+      normalizeDeckConfig({
+        sections: [
+          { label: 'Missing start' },
+          { label: '', start: 1, end: 2 },
+          { label: 'Backwards', start: 3, end: 2 }
+        ]
+      }).sections
+    ).toBeUndefined();
   });
 });

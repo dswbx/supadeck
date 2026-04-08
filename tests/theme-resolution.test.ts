@@ -20,6 +20,9 @@ describe('resolveThemeModulePath', () => {
     expect(resolveThemeModulePath('/tmp/demo/deck.mdx', 'default')).toContain(
       '/src/runtime/themes/default/index.tsx'
     );
+    expect(resolveThemeModulePath('/tmp/demo/deck.mdx', 'supabase')).toContain(
+      '/src/runtime/themes/supabase/index.tsx'
+    );
   });
 
   it('resolves a theme directory to index.tsx', async () => {

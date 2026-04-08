@@ -24,6 +24,13 @@ export interface DeckConfig {
   aspectRatio: string;
   showSlideNumbers: boolean;
   transition: 'none' | 'fade' | 'slide' | string;
+  sections?: DeckSection[];
+}
+
+export interface DeckSection {
+  label: string;
+  start: number;
+  end: number;
 }
 
 export interface DeckSlide {
@@ -63,6 +70,72 @@ function asBoolean(value: unknown, fallback: boolean): boolean {
   return typeof value === 'boolean' ? value : fallback;
 }
 
+function asPositiveInteger(value: unknown): number | null {
+  const parsed =
+    typeof value === 'number'
+      ? value
+      : typeof value === 'string' && value.trim()
+        ? Number(value)
+        : Number.NaN;
+
+  if (!Number.isInteger(parsed) || parsed < 1) {
+    return null;
+  }
+
+  return parsed;
+}
+
+function normalizeDeckSections(value: unknown): DeckSection[] | undefined {
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
+
+  const sections = value.flatMap((entry) => {
+    if (!entry || typeof entry !== 'object') {
+      return [];
+    }
+
+    const label = asString((entry as Record<string, unknown>).label, '');
+    const start = asPositiveInteger((entry as Record<string, unknown>).start);
+    const end = asPositiveInteger(
+      (entry as Record<string, unknown>).end ?? (entry as Record<string, unknown>).start
+    );
+
+    if (!label || start === null || end === null || end < start) {
+      return [];
+    }
+
+    return [
+      {
+        label,
+        start: start - 1,
+        end: end - 1
+      }
+    ];
+  });
+
+  return sections.length > 0 ? sections : undefined;
+}
+
+function sanitizeDeckSections(sections: DeckSection[] | undefined, totalSlides: number): DeckSection[] | undefined {
+  if (!sections || totalSlides <= 0) {
+    return undefined;
+  }
+
+  const sanitized = sections.flatMap((section) => {
+    const start = Math.min(Math.max(section.start, 0), totalSlides - 1);
+    const end = Math.min(Math.max(section.end, start), totalSlides - 1);
+
+    if (end < start) {
+      return [];
+    }
+
+    return [{ ...section, start, end }];
+  });
+
+  return sanitized.length > 0 ? sanitized : undefined;
+}
+
 export function normalizeDeckConfig(
   frontmatter: Record<string, unknown> = {},
   themeOverride?: string
@@ -72,7 +145,8 @@ export function normalizeDeckConfig(
     theme: themeOverride ?? asString(frontmatter.theme, DEFAULT_CONFIG.theme),
     aspectRatio: asString(frontmatter.aspectRatio, DEFAULT_CONFIG.aspectRatio),
     showSlideNumbers: asBoolean(frontmatter.showSlideNumbers, DEFAULT_CONFIG.showSlideNumbers),
-    transition: asString(frontmatter.transition, DEFAULT_CONFIG.transition) as DeckConfig['transition']
+    transition: asString(frontmatter.transition, DEFAULT_CONFIG.transition) as DeckConfig['transition'],
+    sections: normalizeDeckSections(frontmatter.sections)
   };
 }
 
@@ -128,9 +202,12 @@ export function parseDeck(source: string, options: { themeOverride?: string } = 
     slides.push({ index: 0, body: '# Untitled slide' });
   }
 
+  const config = normalizeDeckConfig(matterFile.data, options.themeOverride);
+  config.sections = sanitizeDeckSections(config.sections, slides.length);
+
   return {
     frontmatter: matterFile.data ?? {},
-    config: normalizeDeckConfig(matterFile.data, options.themeOverride),
+    config,
     prelude,
     slides,
     rawContent: content

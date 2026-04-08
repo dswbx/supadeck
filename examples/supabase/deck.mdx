@@ -1,0 +1,270 @@
+---
+title: supalite
+theme: supabase
+showSlideNumbers: true
+sections:
+   - label: Intro
+     start: 1
+     end: 1
+   - label: Goals
+     start: 2
+     end: 4
+   - label: Benefits
+     start: 5
+     end: 6
+   - label: Status
+     start: 7
+     end: 7
+   - label: Ask
+     start: 8
+     end: 8
+---
+
+<SectionSlide>
+   <SupabaseMark size="hero" style={{ marginBottom: 28 }} />
+   <h1>
+      supa<em>lite</em>
+   </h1>
+   <Divider centered />
+   <p className="dim">Supabase for local & prototype projects</p>
+</SectionSlide>
+
+---
+
+<SectionSlide>
+   <h1>
+      What is
+      <br />
+      <em>supalite</em>?
+   </h1>
+   <Divider centered />
+   <p className="dim">Scope · Design goals · Target audience</p>
+</SectionSlide>
+
+---
+
+<Tag tone="red">Out of scope</Tag>
+<h2 style={{ marginTop: 8 }}>
+   What it <span style={{ color: "#ff6b6b" }}>isn't</span>
+</h2>
+<Divider />
+<CardGrid columns={3}>
+   <Card title="Not a replacement" tone="red">
+      <p>
+         Not a drop-in replacement for Supabase. Production apps belong on
+         Supabase.
+      </p>
+   </Card>
+   <Card title="Not full parity" tone="red">
+      <p>
+         100% compatibility is not the goal, only the most common features for
+         AI builders.
+      </p>
+   </Card>
+   <Card title="High-traffic apps" tone="red">
+      <p>
+         Not aiming for high-traffic or large-scale apps. Use Supabase for that.
+      </p>
+   </Card>
+</CardGrid>
+
+---
+
+<Tag>What it is</Tag>
+<h2 style={{ marginTop: 8 }}>
+   Supabase <em>supplement</em>
+</h2>
+<Divider />
+<CardGrid columns={3}>
+   <Card title="For AI builders">
+      <p>
+         Built for local and prototype workflows in tools like Lovable, Bolt,
+         and similar AI-first products.
+      </p>
+   </Card>
+   <Card title="~60% feature parity">
+      <p>
+         Enough of the common surface area to build and iterate quickly without
+         chasing edge-case parity.
+      </p>
+   </Card>
+   <Card title="Seamless upgrade">
+      <p>
+         When you are ready for production, moving to Supabase should require no
+         code changes.
+      </p>
+   </Card>
+</CardGrid>
+
+---
+
+<h2>Benefits</h2>
+<Divider />
+<StatGrid columns={2}>
+   <Stat value="<50ms" label="local boot time" />
+   <Stat
+      value="~400ms"
+      label={
+         <>
+            <span className="mono">250kb bundle</span> deploy time
+         </>
+      }
+   />
+   <Stat value="<1s" label="wake from idle after scale to zero" />
+   <Stat value="$0.01" label="200 idle projects, storage only" />
+</StatGrid>
+
+---
+
+<Wide>
+   <h2>
+      vs <em>Supabase</em>
+   </h2>
+   <Divider />
+   <table>
+      <tr>
+         <th>Metric</th>
+         <th>supalite</th>
+         <th>Supabase (t4g.nano)</th>
+      </tr>
+      <tr>
+         <td className="bold">Idle cost</td>
+         <td>
+            <span className="green bold">Storage only</span> — $0.20/gb
+            <br />
+            <span className="dim mono" style={{ fontSize: "0.85rem" }}>
+               ~0.5mb per small project
+            </span>
+         </td>
+         <td>
+            <span className="bold">~$0.71</span> compute before pausing
+            <br />
+            <span className="dim mono" style={{ fontSize: "0.85rem" }}>
+               $0.0042/hr × 168h (7 days)
+            </span>
+         </td>
+      </tr>
+      <tr>
+         <td className="bold">Scale to zero</td>
+         <td>
+            <span className="green bold">Yes</span> — after 10s inactivity
+         </td>
+         <td>Pauses after ~7 days</td>
+      </tr>
+      <tr>
+         <td className="bold">Cold start</td>
+         <td>
+            <span className="green bold">&lt;1s</span>
+         </td>
+         <td>up to minutes</td>
+      </tr>
+   </table>
+</Wide>
+
+---
+
+<Wide>
+   <h2>
+      Feature <em>status</em>
+   </h2>
+   <Divider />
+   <CardGrid columns={2}>
+      <div>
+         <p
+            className="dim"
+            style={{
+               fontSize: "0.72rem",
+               fontWeight: 600,
+               letterSpacing: "0.08em",
+               textTransform: "uppercase",
+               marginBottom: 18,
+            }}
+         >
+            Products
+         </p>
+         <StatusList>
+            <StatusItem
+               status="live"
+               name="Database"
+               note="SQLite · PGlite · Postgres"
+            />
+            <StatusItem
+               status="live"
+               name="Data API"
+               note="PostgREST-compatible"
+            />
+            <StatusItem
+               status="partial"
+               name="Auth"
+               note="11 endpoints · incl. RLS"
+            />
+            <StatusItem status="planned" name="Storage" />
+            <StatusItem status="planned" name="Realtime" />
+            <StatusItem status="unknown" name="Functions" />
+         </StatusList>
+      </div>
+      <div>
+         <p
+            className="dim"
+            style={{
+               fontSize: "0.72rem",
+               fontWeight: 600,
+               letterSpacing: "0.08em",
+               textTransform: "uppercase",
+               marginBottom: 18,
+            }}
+         >
+            Platform
+         </p>
+         <StatusList>
+            <StatusItem
+               status="live"
+               name="Cloud"
+               note="deploy · push · diff"
+            />
+            <StatusItem
+               status="live"
+               name="Scale to zero"
+               note="after 10s of inactivity"
+            />
+            <StatusItem status="partial" name="Studio" note="read-only" />
+            <StatusItem status="planned" name="Branching" />
+            <StatusItem status="planned" name="Management API" />
+         </StatusList>
+      </div>
+   </CardGrid>
+</Wide>
+
+---
+
+<SectionSlide>
+   <h1>
+      The <em>ask</em>
+   </h1>
+   <Divider centered />
+   <ul style={{ marginTop: 8, textAlign: "left" }}>
+      <li>
+         <b>Try it</b> — spin up a project and kick the tyres
+      </li>
+      <li>
+         <b>Report bugs</b> — anything that feels off
+      </li>
+      <li>
+         <b>Suggest features</b> — what feels missing?
+      </li>
+      <li>
+         <b>Vibe check</b> — does it feel like Supabase?
+      </li>
+   </ul>
+   <div className="mt-10 text-center flex flex-col items-center">
+      <code className="text-xl py-3 px-8 rounded-lg text-accent bg-white/7">
+         npx lite-supa dev
+      </code>
+      <small
+         className="dim"
+         style={{ marginTop: 12, fontSize: "0.9rem", opacity: 0.5 }}
+      >
+         (naming things is hard)
+      </small>
+   </div>
+</SectionSlide>

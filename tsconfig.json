@@ -13,5 +13,5 @@
     "noEmit": true,
     "types": ["node", "vite/client", "vitest/globals"]
   },
-  "include": ["src", "tests", "ExampleCard.tsx"]
+  "include": ["src", "tests", "examples/**/*.tsx"]
 }

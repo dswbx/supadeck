@@ -4,9 +4,11 @@ import path from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import mdx from '@mdx-js/rollup';
-import type { InlineConfig, Plugin } from 'vite';
+import type { HmrContext, InlineConfig, ModuleNode, Plugin } from 'vite';
 import { normalizePath } from 'vite';
 import { parseDeck } from '../content/parse-deck.js';
+import { remarkUnwrapJsxParagraphs } from '../content/remark-unwrap-jsx-paragraphs.js';
+import { injectTailwindSources } from './tailwind-sources.js';
 import {
   resolveRuntimeModulePath,
   resolveThemeModulePath
@@ -29,6 +31,48 @@ function slideIdFor(deckPath: string, index: number): string {
 
 function sanitizeForTemplateLiteral(input: string): string {
   return input.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
+}
+
+function isCssModule(module: ModuleNode): boolean {
+  const id = module.id ?? module.file ?? '';
+  const [pathname] = id.split('?', 1);
+  return pathname.endsWith('.css');
+}
+
+function collectImportedCssModules(rootModule: ModuleNode): ModuleNode[] {
+  const queue = [...rootModule.importedModules];
+  const visited = new Set<ModuleNode>();
+  const cssModules: ModuleNode[] = [];
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (!current || visited.has(current)) {
+      continue;
+    }
+
+    visited.add(current);
+
+    if (isCssModule(current)) {
+      cssModules.push(current);
+    }
+
+    for (const imported of current.importedModules) {
+      queue.push(imported);
+    }
+  }
+
+  return cssModules;
+}
+
+function invalidateModules(
+  context: HmrContext,
+  modules: Iterable<ModuleNode>,
+  affectedModules: ModuleNode[]
+): void {
+  for (const module of modules) {
+    context.server.moduleGraph.invalidateModule(module);
+    affectedModules.push(module);
+  }
 }
 
 interface SupaslidesConfigOptions {
@@ -127,27 +171,41 @@ export default deck;
       }
       return null;
     },
+    transform(code, id) {
+      const [pathname] = id.split('?', 1);
+
+      if (!pathname.endsWith('.css')) {
+        return null;
+      }
+
+      return {
+        code: injectTailwindSources(code, deckPath),
+        map: null
+      };
+    },
     async handleHotUpdate(context) {
       if (normalizePath(context.file) === normalizePath(deckPath)) {
         const source = await fs.readFile(deckPath, 'utf8');
         const deck = parseDeck(source, { themeOverride });
-        const affectedModules = [];
+        const affectedModules: ModuleNode[] = [];
         const slideCount = Math.max(lastKnownSlideCount, deck.slides.length);
         lastKnownThemePath = resolveThemeModulePath(deckPath, deck.config.theme, import.meta.url);
 
         for (const moduleId of [DECK_VIRTUAL_RESOLVED, THEME_RESOLVED]) {
           const module = context.server.moduleGraph.getModuleById(moduleId);
           if (module) {
-            context.server.moduleGraph.invalidateModule(module);
-            affectedModules.push(module);
+            invalidateModules(context, [module], affectedModules);
+
+            if (moduleId === THEME_RESOLVED) {
+              invalidateModules(context, collectImportedCssModules(module), affectedModules);
+            }
           }
         }
 
         for (let index = 0; index < slideCount; index += 1) {
           const module = context.server.moduleGraph.getModuleById(slideIdFor(deckPath, index));
           if (module) {
-            context.server.moduleGraph.invalidateModule(module);
-            affectedModules.push(module);
+            invalidateModules(context, [module], affectedModules);
           }
         }
 
@@ -184,7 +242,8 @@ export function createSupaslidesViteConfig({
     plugins: [
       createSupaslidesPlugin({ deckPath, themeOverride }),
       mdx({
-        include: [/\.mdx$/, /\.mdx\?.*$/]
+        include: [/\.mdx$/, /\.mdx\?.*$/],
+        remarkPlugins: [remarkUnwrapJsxParagraphs]
       }),
       react(),
       tailwindcss()
