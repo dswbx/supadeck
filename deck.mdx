@@ -1,13 +1,12 @@
 ---
 title: Supaslides
-theme: default
+theme: sunset
 aspectRatio: 16:9
 showSlideNumbers: true
 transition: fade
 ---
 
 import ExampleCard from "./ExampleCard.tsx";
-import { Callout, Columns, Disclosure } from "supaslides/components";
 
 # Supaslides
 
@@ -26,8 +25,8 @@ Write presentations in one `deck.mdx` file.
       <ExampleCard title="Local import">Your own React component.</ExampleCard>
    }
    right={
-      <Disclosure title="Built on Base UI">
-         Supalides ships small presentation-ready primitives too.
+      <Disclosure title="Theme-provided components">
+         Supalides themes can define deck components directly for MDX.
       </Disclosure>
    }
 />

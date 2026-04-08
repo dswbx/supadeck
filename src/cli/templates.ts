@@ -8,7 +8,6 @@ transition: fade
 ---
 
 import ExampleCard from './ExampleCard.tsx'
-import { Callout, Columns, Disclosure } from 'supaslides/components'
 
 # Supaslides
 
@@ -24,7 +23,7 @@ Write presentations in one \`deck.mdx\` file.
 
 <Columns
   left={<ExampleCard title="Local import">Your own React component.</ExampleCard>}
-  right={<Disclosure title="Built on Base UI">Supaslides ships small presentation-ready primitives too.</Disclosure>}
+  right={<Disclosure title="Theme-provided components">Themes can expose components directly to MDX.</Disclosure>}
 />
 
 ---

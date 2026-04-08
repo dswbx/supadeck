@@ -1,5 +1,6 @@
-import React from "react";
-import { SlideFrameProps, parseAspectRatio } from "../App.js";
+import React from 'react';
+import type { SlideFrameProps } from '../theme-types.js';
+import { parseAspectRatio } from '../utils/use-current-slide.js';
 
 export function SlideFrame({
    children,
@@ -11,8 +12,8 @@ export function SlideFrame({
    const ratio = parseAspectRatio(config.aspectRatio);
    return (
       <section
-         className={`slide-frame ${printMode ? "slide-frame-print" : ""}`}
-         style={{ "--slide-aspect-ratio": ratio } as React.CSSProperties}
+         className={`slide-frame ${printMode ? 'slide-frame-print' : ''}`}
+         style={{ '--slide-aspect-ratio': ratio } as React.CSSProperties}
          data-transition={config.transition}
       >
          <div className="slide-surface">

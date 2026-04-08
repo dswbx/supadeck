@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "description": "Zero-config MDX presentations with hot reload and PDF export.",
   "type": "module",
+  "types": "./dist/index.d.ts",
   "bin": {
     "supaslides": "./dist/cli/index.js"
   },
   "exports": {
-    ".": "./dist/cli/index.js",
-    "./components": "./dist/runtime/components/index.js"
+    ".": "./dist/index.js"
   },
   "files": [
     "dist",

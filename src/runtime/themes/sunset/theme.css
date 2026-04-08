@@ -1,3 +1,5 @@
+@import "../default/theme.css";
+
 :root {
   --color-background: #120f1d;
   --color-foreground: #f9f4ec;

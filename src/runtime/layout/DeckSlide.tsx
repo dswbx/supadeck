@@ -1,6 +1,5 @@
-import type { DeckSlideProps } from "../App.js";
-import mdxComponents from "../mdx-components.js";
-import { SlideFrame } from "./SlideFrame.js";
+import { SlideFrame } from './SlideFrame.js';
+import type { DeckSlideRenderProps } from '../theme-types.js';
 
 export function DeckSlide({
    slide,
@@ -8,7 +7,8 @@ export function DeckSlide({
    total,
    index,
    printMode,
-}: DeckSlideProps) {
+   components,
+}: DeckSlideRenderProps) {
    const Slide = slide.Component;
    return (
       <SlideFrame
@@ -17,7 +17,7 @@ export function DeckSlide({
          total={total}
          printMode={printMode}
       >
-         <Slide components={mdxComponents()} />
+         <Slide components={components} />
       </SlideFrame>
    );
 }

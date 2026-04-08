@@ -3,9 +3,9 @@ declare module 'virtual:supaslides/deck' {
   export default deck;
 }
 
-declare module 'virtual:supaslides/theme-entry' {
-  const themeEntry: undefined;
-  export default themeEntry;
+declare module 'virtual:supaslides/theme' {
+  const theme: import('../runtime/theme-types.js').ThemeModule;
+  export default theme;
 }
 
 interface Window {

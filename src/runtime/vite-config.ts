@@ -1,5 +1,4 @@
 import fs from 'node:fs/promises';
-import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
@@ -8,18 +7,17 @@ import mdx from '@mdx-js/rollup';
 import type { InlineConfig, Plugin } from 'vite';
 import { normalizePath } from 'vite';
 import { parseDeck } from '../content/parse-deck.js';
+import {
+  resolveRuntimeModulePath,
+  resolveThemeModulePath
+} from './theme-resolution.js';
 
 const DECK_VIRTUAL_ID = 'virtual:supaslides/deck';
 const DECK_VIRTUAL_RESOLVED = '\0virtual:supaslides/deck';
-const THEME_ENTRY_ID = 'virtual:supaslides/theme-entry';
-const THEME_ENTRY_RESOLVED = '\0virtual:supaslides/theme-entry';
-const COMPONENTS_ID = 'supaslides/components';
-const COMPONENTS_RESOLVED = '\0virtual:supaslides/components';
-
-const builtInThemes: Record<string, string> = {
-  default: fileURLToPath(new URL('./themes/default.css', import.meta.url)),
-  sunset: fileURLToPath(new URL('./themes/sunset.css', import.meta.url))
-};
+const THEME_ID = 'virtual:supaslides/theme';
+const THEME_RESOLVED = '\0virtual:supaslides/theme';
+const ROOT_EXPORT_ID = 'supaslides';
+const ROOT_EXPORT_RESOLVED = '\0virtual:supaslides/root-export';
 
 function toFsImport(filePath: string): string {
   return `/@fs/${normalizePath(filePath)}`;
@@ -31,32 +29,6 @@ function slideIdFor(deckPath: string, index: number): string {
 
 function sanitizeForTemplateLiteral(input: string): string {
   return input.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
-}
-
-function resolveRuntimeModulePath(baseUrl: string, stem: string): string {
-  for (const extension of ['.tsx', '.ts', '.jsx', '.js']) {
-    const candidate = fileURLToPath(new URL(`${stem}${extension}`, baseUrl));
-    if (existsSync(candidate)) {
-      return candidate;
-    }
-  }
-
-  return fileURLToPath(new URL(`${stem}.js`, baseUrl));
-}
-
-function resolveThemeFile(deckPath: string, themeName: string) {
-  if (!themeName || builtInThemes[themeName]) {
-    return {
-      builtInThemePath: builtInThemes[themeName || 'default'],
-      customThemePath: null
-    };
-  }
-
-  const customThemePath = path.resolve(path.dirname(deckPath), themeName);
-  return {
-    builtInThemePath: builtInThemes.default,
-    customThemePath
-  };
 }
 
 interface SupaslidesConfigOptions {
@@ -72,6 +44,11 @@ function createSupaslidesPlugin({
   themeOverride
 }: Pick<SupaslidesConfigOptions, 'deckPath' | 'themeOverride'>): Plugin {
   let lastKnownSlideCount = 0;
+  let lastKnownThemePath = resolveThemeModulePath(
+    deckPath,
+    themeOverride ?? 'default',
+    import.meta.url
+  );
 
   return {
     name: 'supaslides',
@@ -104,26 +81,19 @@ export default deck;
 `;
       }
 
-      if (id === THEME_ENTRY_RESOLVED) {
+      if (id === THEME_RESOLVED) {
         this.addWatchFile(deckPath);
         const source = await fs.readFile(deckPath, 'utf8');
         const deck = parseDeck(source, { themeOverride });
         lastKnownSlideCount = deck.slides.length;
-        const themeFiles = resolveThemeFile(deckPath, deck.config.theme);
-        if (themeFiles.customThemePath) {
-          this.addWatchFile(themeFiles.customThemePath);
-        }
-        const imports = [`import ${JSON.stringify(toFsImport(themeFiles.builtInThemePath))};`];
-        if (themeFiles.customThemePath) {
-          imports.push(`import ${JSON.stringify(toFsImport(themeFiles.customThemePath))};`);
-        }
-
-        return `${imports.join('\n')}\nexport {};`;
+        lastKnownThemePath = resolveThemeModulePath(deckPath, deck.config.theme, import.meta.url);
+        this.addWatchFile(lastKnownThemePath);
+        return `import themeModule from ${JSON.stringify(toFsImport(lastKnownThemePath))};\nexport default themeModule;`;
       }
 
-      if (id === COMPONENTS_RESOLVED) {
-        const componentPath = resolveRuntimeModulePath(import.meta.url, './components/index');
-        return `export * from ${JSON.stringify(toFsImport(componentPath))};`;
+      if (id === ROOT_EXPORT_RESOLVED) {
+        const rootExportPath = resolveRuntimeModulePath(import.meta.url, '../index');
+        return `export * from ${JSON.stringify(toFsImport(rootExportPath))};`;
       }
 
       if (id.startsWith(`${normalizePath(deckPath)}?supaslides-slide=`)) {
@@ -146,11 +116,11 @@ export default deck;
       if (id === DECK_VIRTUAL_ID) {
         return DECK_VIRTUAL_RESOLVED;
       }
-      if (id === THEME_ENTRY_ID) {
-        return THEME_ENTRY_RESOLVED;
+      if (id === THEME_ID) {
+        return THEME_RESOLVED;
       }
-      if (id === COMPONENTS_ID) {
-        return COMPONENTS_RESOLVED;
+      if (id === ROOT_EXPORT_ID) {
+        return ROOT_EXPORT_RESOLVED;
       }
       if (id.startsWith(`${normalizePath(deckPath)}?supaslides-slide=`)) {
         return id;
@@ -163,8 +133,9 @@ export default deck;
         const deck = parseDeck(source, { themeOverride });
         const affectedModules = [];
         const slideCount = Math.max(lastKnownSlideCount, deck.slides.length);
+        lastKnownThemePath = resolveThemeModulePath(deckPath, deck.config.theme, import.meta.url);
 
-        for (const moduleId of [DECK_VIRTUAL_RESOLVED, THEME_ENTRY_RESOLVED]) {
+        for (const moduleId of [DECK_VIRTUAL_RESOLVED, THEME_RESOLVED]) {
           const module = context.server.moduleGraph.getModuleById(moduleId);
           if (module) {
             context.server.moduleGraph.invalidateModule(module);
@@ -184,6 +155,14 @@ export default deck;
         return affectedModules;
       }
 
+      if (normalizePath(context.file) === normalizePath(lastKnownThemePath)) {
+        const themeModule = context.server.moduleGraph.getModuleById(THEME_RESOLVED);
+        if (themeModule) {
+          context.server.moduleGraph.invalidateModule(themeModule);
+          return [themeModule];
+        }
+      }
+
       return undefined;
     }
   };
@@ -197,6 +176,7 @@ export function createSupaslidesViteConfig({
   outputDirName = '.supaslides-dist'
 }: SupaslidesConfigOptions): InlineConfig {
   const runtimeRoot = fileURLToPath(new URL('.', import.meta.url));
+  const packageRoot = path.resolve(runtimeRoot, '..');
   const workspaceRoot = path.dirname(deckPath);
 
   return {
@@ -214,7 +194,7 @@ export function createSupaslidesViteConfig({
       port,
       open,
       fs: {
-        allow: [runtimeRoot, workspaceRoot]
+        allow: [runtimeRoot, packageRoot, workspaceRoot]
       }
     },
     preview: {

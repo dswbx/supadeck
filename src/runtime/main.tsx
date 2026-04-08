@@ -1,10 +1,10 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import deckModule from 'virtual:supaslides/deck';
-import 'virtual:supaslides/theme-entry';
-import './styles/base.css';
+import themeModule from 'virtual:supaslides/theme';
 import { App } from './App.js';
 import type { DeckModule } from '../content/parse-deck.js';
+import type { ThemeModule } from './theme-types.js';
 
 const container = document.getElementById('root');
 
@@ -13,11 +13,16 @@ if (!container) {
 }
 
 const root = createRoot(container);
+let currentDeck = deckModule;
+let currentTheme = themeModule;
 
-function render(deck = deckModule): void {
+function render(
+  deck: DeckModule = currentDeck,
+  theme: ThemeModule = currentTheme
+): void {
   root.render(
     <React.StrictMode>
-      <App deck={deck} />
+      <App deck={deck} theme={theme} />
     </React.StrictMode>
   );
 }
@@ -26,7 +31,14 @@ render();
 
 if (import.meta.hot) {
   import.meta.hot.accept('virtual:supaslides/deck', (nextModule: unknown) => {
-    const nextDeck = (nextModule as { default?: DeckModule } | undefined)?.default ?? deckModule;
-    render(nextDeck);
+    currentDeck =
+      (nextModule as { default?: DeckModule } | undefined)?.default ?? currentDeck;
+    render();
+  });
+
+  import.meta.hot.accept('virtual:supaslides/theme', (nextModule: unknown) => {
+    currentTheme =
+      (nextModule as { default?: ThemeModule } | undefined)?.default ?? currentTheme;
+    render();
   });
 }
