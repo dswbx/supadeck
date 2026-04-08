@@ -3,6 +3,10 @@ import { Callout, Columns, Disclosure, Frame } from "./components/index.js";
 import type { MdxComponentMap, ThemeModule } from "./theme-types.js";
 import { Center } from "./components/Center.js";
 
+function cx(...values: Array<string | false | null | undefined>): string {
+   return values.filter(Boolean).join(" ");
+}
+
 export function createDefaultComponents(): MdxComponentMap {
    return {
       h1: (props: React.ComponentProps<"h1">) => (
@@ -52,6 +56,26 @@ export function createDefaultComponents(): MdxComponentMap {
             className="overflow-x-auto rounded-[var(--radius-lg)] border border-[color:var(--color-border)] bg-[color:var(--color-code-bg)] p-6 text-lg"
             {...props}
          />
+      ),
+      table: ({ className, ...props }: React.ComponentProps<"table">) => (
+         <div className="deck-table-wrap">
+            <table className={cx("deck-table", className)} {...props} />
+         </div>
+      ),
+      thead: ({ className, ...props }: React.ComponentProps<"thead">) => (
+         <thead className={cx("deck-thead", className)} {...props} />
+      ),
+      tbody: ({ className, ...props }: React.ComponentProps<"tbody">) => (
+         <tbody className={cx("deck-tbody", className)} {...props} />
+      ),
+      tr: ({ className, ...props }: React.ComponentProps<"tr">) => (
+         <tr className={cx("deck-tr", className)} {...props} />
+      ),
+      th: ({ className, ...props }: React.ComponentProps<"th">) => (
+         <th className={cx("deck-th", className)} {...props} />
+      ),
+      td: ({ className, ...props }: React.ComponentProps<"td">) => (
+         <td className={cx("deck-td", className)} {...props} />
       ),
       blockquote: (props: React.ComponentProps<"blockquote">) => (
          <blockquote

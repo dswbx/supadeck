@@ -6,7 +6,9 @@ export function Center({
    className?: string;
 }) {
    return (
-      <div className={`flex flex-col items-center justify-center ${className}`}>
+      <div
+         className={`flex gap-4 flex-col items-center justify-center *:text-center ${className}`}
+      >
          {children}
       </div>
    );

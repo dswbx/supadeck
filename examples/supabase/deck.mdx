@@ -21,25 +21,19 @@ sections:
 ---
 
 <Center>
-   <SupabaseMark size="hero" style={{ marginBottom: 28 }} />
-   <h1>
-      supa<em>lite</em>
-   </h1>
-   <Divider centered />
+   <SupabaseMark size="hero" />
+   # supa*lite*
+   ***
    <p className="dim">Supabase for local & prototype projects</p>
 </Center>
 
 ---
 
-<SectionSlide>
-   <h1>
-      What is
-      <br />
-      <em>supalite</em>?
-   </h1>
-   <Divider centered />
+<Center>
+   # What is <br /> *supalite*?
+   ***
    <p className="dim">Scope · Design goals · Target audience</p>
-</SectionSlide>
+</Center>
 
 ---
 
@@ -63,7 +57,7 @@ sections:
 ---
 
 <Tag>What it is</Tag>
-## Supabase <em>supplement</em>
+## Supabase *supplement*
 <Divider />
 <CardGrid columns={3}>
    <Card title="For AI builders">
@@ -88,7 +82,7 @@ sections:
 
 ---
 
-<h2>Benefits</h2>
+## Benefits
 <Divider />
 <StatGrid columns={2}>
    <Stat value="<50ms" label="local boot time" />
@@ -106,117 +100,106 @@ sections:
 
 ---
 
-## vs <em>Supabase</em>
+## vs *Supabase*
 
 <Divider />
 
-| Metric | supalite | Supabase (t4g.nano) | | ------ | -------- | ------------------- |
-| Idle cost | **Storage only** — $0.20/gb _~0.5mb per small project_ | **~$0.71** compute before pausing _$0.0042/hr × 168h (7 days)_ | | Scale to zero | **Yes** — after 10s inactivity | Pauses after ~7 days | | Cold start | **\<1s** | up to minutes |
+| Metric |supalite | Supabase (t4g.nano) |
+| ------ | -------- | ------------------- |
+| Idle cost | **Storage only** – $0.20/gb <br /> <small className="dim">\~0.5mb per small project</small> | **~$0.71** compute before pausing <br /> <small className="dim">$0.0042/hr × 168h (7 days) · us-east-1</small> |
+| Scale to zero | **Yes** – after 10s inactivity | Pauses after ~7 days |
+| Cold start | **Yes** – **\<1s** | up to minutes |
+| 200 idle projects | **\~$0.01** (storage only) <br /> <small className="dim">scales to zero after 10s</small> | **\~$142** (compute) <br /> <small className="dim">200 × $0.71 before each pauses</small> |
 
 ---
 
-<Wide>
-   <h2>
-      Feature <em>status</em>
-   </h2>
-   <Divider />
-   <CardGrid columns={2}>
-      <div>
-         <p
-            className="dim"
-            style={{
-               fontSize: "0.72rem",
-               fontWeight: 600,
-               letterSpacing: "0.08em",
-               textTransform: "uppercase",
-               marginBottom: 18,
-            }}
-         >
-            Products
-         </p>
-         <StatusList>
-            <StatusItem
-               status="live"
-               name="Database"
-               note="SQLite · PGlite · Postgres"
-            />
-            <StatusItem
-               status="live"
-               name="Data API"
-               note="PostgREST-compatible"
-            />
-            <StatusItem
-               status="partial"
-               name="Auth"
-               note="11 endpoints · incl. RLS"
-            />
-            <StatusItem status="planned" name="Storage" />
-            <StatusItem status="planned" name="Realtime" />
-            <StatusItem status="unknown" name="Functions" />
-         </StatusList>
-      </div>
-      <div>
-         <p
-            className="dim"
-            style={{
-               fontSize: "0.72rem",
-               fontWeight: 600,
-               letterSpacing: "0.08em",
-               textTransform: "uppercase",
-               marginBottom: 18,
-            }}
-         >
-            Platform
-         </p>
-         <StatusList>
-            <StatusItem
-               status="live"
-               name="Cloud"
-               note="deploy · push · diff"
-            />
-            <StatusItem
-               status="live"
-               name="Scale to zero"
-               note="after 10s of inactivity"
-            />
-            <StatusItem status="partial" name="Studio" note="read-only" />
-            <StatusItem status="planned" name="Branching" />
-            <StatusItem status="planned" name="Management API" />
-         </StatusList>
-      </div>
-   </CardGrid>
-</Wide>
+## Feature *status*
+<Divider />
+<CardGrid columns={2}>
+  <div>
+      <p
+        className="dim"
+        style={{
+            fontSize: "0.72rem",
+            fontWeight: 600,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            marginBottom: 18,
+        }}
+      >
+        Products
+      </p>
+      <StatusList>
+        <StatusItem
+            status="live"
+            name="Database"
+            note="SQLite · PGlite · Postgres"
+        />
+        <StatusItem
+            status="live"
+            name="Data API"
+            note="PostgREST-compatible"
+        />
+        <StatusItem
+            status="partial"
+            name="Auth"
+            note="11 endpoints · incl. RLS"
+        />
+        <StatusItem status="planned" name="Storage" />
+        <StatusItem status="planned" name="Realtime" />
+        <StatusItem status="unknown" name="Functions" />
+      </StatusList>
+  </div>
+  <div>
+      <p
+        className="dim"
+        style={{
+            fontSize: "0.72rem",
+            fontWeight: 600,
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+            marginBottom: 18,
+        }}
+      >
+        Platform
+      </p>
+      <StatusList>
+        <StatusItem
+            status="live"
+            name="Cloud"
+            note="deploy · push · diff"
+        />
+        <StatusItem
+            status="live"
+            name="Scale to zero"
+            note="after 10s of inactivity"
+        />
+        <StatusItem status="partial" name="Studio" note="read-only" />
+        <StatusItem status="planned" name="Branching" />
+        <StatusItem status="planned" name="Management API" />
+      </StatusList>
+  </div>
+</CardGrid>
 
 ---
 
-<SectionSlide>
-   <h1>
-      The <em>ask</em>
-   </h1>
-   <Divider centered />
-   <ul style={{ marginTop: 8, textAlign: "left" }}>
-      <li>
-         <b>Try it</b> — spin up a project and kick the tyres
-      </li>
-      <li>
-         <b>Report bugs</b> — anything that feels off
-      </li>
-      <li>
-         <b>Suggest features</b> — what feels missing?
-      </li>
-      <li>
-         <b>Vibe check</b> — does it feel like Supabase?
-      </li>
-   </ul>
+<Center>
+   # The *ask*
+   ***
+   
+   <div className="*:list-disc *:list-inside *:text-left">
+   - **Try it** — spin up a project and kick the tyres
+   - **Report bugs** — anything that feels off
+   - **Suggest features** — what feels missing?
+   - **Vibe check** — does it feel like Supabase?
+   </div>
+   
    <div className="mt-10 text-center flex flex-col items-center">
       <code className="text-xl py-3 px-8 rounded-lg text-accent bg-white/7">
          npx lite-supa dev
       </code>
-      <small
-         className="dim"
-         style={{ marginTop: 12, fontSize: "0.9rem", opacity: 0.5 }}
-      >
+      <small className="dim mt-2 text-xs">
          (naming things is hard)
       </small>
    </div>
-</SectionSlide>
+</Center>

@@ -1,6 +1,7 @@
 import type React from 'react';
 import matter from 'gray-matter';
 import { unified } from 'unified';
+import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import remarkMdx from 'remark-mdx';
 
@@ -16,7 +17,7 @@ interface DeckAstRoot {
   children?: DeckAstNode[];
 }
 
-const parser = unified().use(remarkParse as never).use(remarkMdx as never);
+const parser = unified().use(remarkParse as never).use(remarkGfm as never).use(remarkMdx as never);
 
 export interface DeckConfig {
   title: string;

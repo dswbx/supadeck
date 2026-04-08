@@ -37,6 +37,20 @@ import Thing from './Thing.tsx'
     expect(deck.slides[0].body).toContain('Untitled slide');
   });
 
+  it('keeps GFM tables inside a single slide', () => {
+    const deck = parseDeck(`# Metrics
+
+| Name | Value |
+| ---- | ----- |
+| One  | 1     |
+| Two  | 2     |
+`);
+
+    expect(deck.slides).toHaveLength(1);
+    expect(deck.slides[0].body).toContain('| Name | Value |');
+    expect(deck.slides[0].body).toContain('| ---- | ----- |');
+  });
+
   it('normalizes and clamps sections from frontmatter', () => {
     const deck = parseDeck(`---
 title: Sections

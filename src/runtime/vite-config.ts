@@ -6,6 +6,7 @@ import react from '@vitejs/plugin-react';
 import mdx from '@mdx-js/rollup';
 import type { HmrContext, InlineConfig, ModuleNode, Plugin } from 'vite';
 import { normalizePath } from 'vite';
+import remarkGfm from 'remark-gfm';
 import { parseDeck } from '../content/parse-deck.js';
 import { remarkUnwrapJsxParagraphs } from '../content/remark-unwrap-jsx-paragraphs.js';
 import { injectTailwindSources, isTailwindSourceFile } from './tailwind-sources.js';
@@ -250,7 +251,7 @@ export function createSupaslidesViteConfig({
       createSupaslidesPlugin({ deckPath, themeOverride }),
       mdx({
         include: [/\.mdx$/, /\.mdx\?.*$/],
-        remarkPlugins: [remarkUnwrapJsxParagraphs]
+        remarkPlugins: [remarkGfm, remarkUnwrapJsxParagraphs]
       }),
       react(),
       tailwindcss()
