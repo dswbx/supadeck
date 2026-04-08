@@ -8,7 +8,11 @@ import type { HmrContext, InlineConfig, ModuleNode, Plugin } from 'vite';
 import { normalizePath } from 'vite';
 import { parseDeck } from '../content/parse-deck.js';
 import { remarkUnwrapJsxParagraphs } from '../content/remark-unwrap-jsx-paragraphs.js';
-import { injectTailwindSources } from './tailwind-sources.js';
+import { injectTailwindSources, isTailwindSourceFile } from './tailwind-sources.js';
+import {
+  collectImportedCssModules,
+  dispatchTailwindCssUpdates
+} from './tailwind-hmr.js';
 import {
   resolveRuntimeModulePath,
   resolveThemeModulePath
@@ -31,37 +35,6 @@ function slideIdFor(deckPath: string, index: number): string {
 
 function sanitizeForTemplateLiteral(input: string): string {
   return input.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
-}
-
-function isCssModule(module: ModuleNode): boolean {
-  const id = module.id ?? module.file ?? '';
-  const [pathname] = id.split('?', 1);
-  return pathname.endsWith('.css');
-}
-
-function collectImportedCssModules(rootModule: ModuleNode): ModuleNode[] {
-  const queue = [...rootModule.importedModules];
-  const visited = new Set<ModuleNode>();
-  const cssModules: ModuleNode[] = [];
-
-  while (queue.length > 0) {
-    const current = queue.shift();
-    if (!current || visited.has(current)) {
-      continue;
-    }
-
-    visited.add(current);
-
-    if (isCssModule(current)) {
-      cssModules.push(current);
-    }
-
-    for (const imported of current.importedModules) {
-      queue.push(imported);
-    }
-  }
-
-  return cssModules;
 }
 
 function invalidateModules(
@@ -184,23 +157,26 @@ export default deck;
       };
     },
     async handleHotUpdate(context) {
-      if (normalizePath(context.file) === normalizePath(deckPath)) {
+      const isDeckFileChange = normalizePath(context.file) === normalizePath(deckPath);
+      const isWorkspaceTailwindSourceChange = isTailwindSourceFile(deckPath, context.file);
+
+      if (isDeckFileChange) {
         const source = await fs.readFile(deckPath, 'utf8');
         const deck = parseDeck(source, { themeOverride });
         const affectedModules: ModuleNode[] = [];
         const slideCount = Math.max(lastKnownSlideCount, deck.slides.length);
         lastKnownThemePath = resolveThemeModulePath(deckPath, deck.config.theme, import.meta.url);
+        const themeModule = context.server.moduleGraph.getModuleById(THEME_RESOLVED);
+        const themeCssModules = themeModule ? collectImportedCssModules(themeModule) : [];
 
         for (const moduleId of [DECK_VIRTUAL_RESOLVED, THEME_RESOLVED]) {
           const module = context.server.moduleGraph.getModuleById(moduleId);
           if (module) {
             invalidateModules(context, [module], affectedModules);
-
-            if (moduleId === THEME_RESOLVED) {
-              invalidateModules(context, collectImportedCssModules(module), affectedModules);
-            }
           }
         }
+
+        invalidateModules(context, themeCssModules, affectedModules);
 
         for (let index = 0; index < slideCount; index += 1) {
           const module = context.server.moduleGraph.getModuleById(slideIdFor(deckPath, index));
@@ -210,7 +186,38 @@ export default deck;
         }
 
         lastKnownSlideCount = deck.slides.length;
+        const cssDispatch = dispatchTailwindCssUpdates({
+          file: context.file,
+          hot: context.server.ws,
+          modules: themeCssModules,
+          timestamp: context.timestamp
+        });
+
+        if (cssDispatch.kind === 'full-reload') {
+          return [];
+        }
+
         return affectedModules;
+      }
+
+      if (isWorkspaceTailwindSourceChange) {
+        const themeModule = context.server.moduleGraph.getModuleById(THEME_RESOLVED);
+        const themeCssModules = themeModule ? collectImportedCssModules(themeModule) : [];
+        const affectedModules: ModuleNode[] = [];
+        invalidateModules(context, themeCssModules, affectedModules);
+
+        const cssDispatch = dispatchTailwindCssUpdates({
+          file: context.file,
+          hot: context.server.ws,
+          modules: themeCssModules,
+          timestamp: context.timestamp
+        });
+
+        if (cssDispatch.kind === 'full-reload') {
+          return [];
+        }
+
+        return undefined;
       }
 
       if (normalizePath(context.file) === normalizePath(lastKnownThemePath)) {
