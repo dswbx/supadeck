@@ -122,7 +122,7 @@ export default deck;
       }
 
       if (id === COMPONENTS_RESOLVED) {
-        const componentPath = resolveRuntimeModulePath(import.meta.url, './public-components');
+        const componentPath = resolveRuntimeModulePath(import.meta.url, './components/index');
         return `export * from ${JSON.stringify(toFsImport(componentPath))};`;
       }
 

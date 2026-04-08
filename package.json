@@ -8,7 +8,7 @@
   },
   "exports": {
     ".": "./dist/cli/index.js",
-    "./components": "./dist/runtime/public-components.js"
+    "./components": "./dist/runtime/components/index.js"
   },
   "files": [
     "dist",
