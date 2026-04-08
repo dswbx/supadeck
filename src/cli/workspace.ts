@@ -2,12 +2,18 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { starterDeckTemplate, starterExampleComponent } from './templates.js';
 
-export function resolveDeckPath(input?: string, cwd = process.cwd()): string {
-  if (!input) {
+export function resolveDeckPath(
+  input?: string,
+  cwd = process.cwd(),
+  defaultInput?: string
+): string {
+  const resolvedInput = input ?? defaultInput;
+
+  if (!resolvedInput) {
     return path.resolve(cwd, 'deck.mdx');
   }
 
-  const candidate = path.resolve(cwd, input);
+  const candidate = path.resolve(cwd, resolvedInput);
   if (path.extname(candidate)) {
     return candidate;
   }

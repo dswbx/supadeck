@@ -101,7 +101,7 @@ export function parseArguments(argv: string[]): ParsedArguments {
 
 async function main(): Promise<void> {
   const { command, options } = parseArguments(process.argv.slice(2));
-  const deckPath = resolveDeckPath(options.input, process.cwd());
+  const deckPath = resolveDeckPath(options.input, process.cwd(), process.env.SUPASLIDES_DEFAULT_INPUT);
 
   if (command === 'dev' && options.create) {
     await ensureStarterDeck(deckPath);

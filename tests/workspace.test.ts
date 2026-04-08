@@ -7,6 +7,12 @@ describe('resolveDeckPath', () => {
     expect(resolveDeckPath(undefined, '/tmp/demo')).toBe('/tmp/demo/deck.mdx');
   });
 
+  it('uses the configured default workspace when provided', () => {
+    expect(resolveDeckPath(undefined, '/tmp/demo', 'examples/dev')).toBe(
+      '/tmp/demo/examples/dev/deck.mdx'
+    );
+  });
+
   it('treats a directory as a deck workspace', () => {
     expect(resolveDeckPath('slides', '/tmp/demo')).toBe('/tmp/demo/slides/deck.mdx');
   });

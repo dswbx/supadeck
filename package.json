@@ -16,8 +16,8 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json && node ./scripts/copy-static.mjs",
-    "dev": "tsx ./src/cli/index.ts",
-    "export": "tsx ./src/cli/index.ts export",
+    "dev": "SUPASLIDES_DEFAULT_INPUT=examples/dev tsx ./src/cli/index.ts",
+    "export": "SUPASLIDES_DEFAULT_INPUT=examples/dev tsx ./src/cli/index.ts export",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json"
   },
