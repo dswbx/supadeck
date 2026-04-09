@@ -7,7 +7,7 @@ showSlideNumbers: true
 transition: fade
 ---
 
-# Supadeck
+# *Supa*deck
 
 Write presentations in one \`deck.mdx\` file.
 
@@ -15,14 +15,48 @@ Write presentations in one \`deck.mdx\` file.
   Edit this file and the deck will hot reload automatically.
 </Callout>
 
+Use arrow keys to navigate.
+
 ---
 
-## Custom components
+## Use *markdown* to write your slides.
+
+\`\`\`md
+Lorem ipsum *dolor* sit **amet**...
+
+- item 1
+- item 2
+- item 3
+\`\`\`
+
+Lorem ipsum *dolor* sit **amet**...
+
+- item 1
+- item 2
+- item 3
+
+---
+
+## Or use *custom components*
 
 <Columns
   left={<Frame label="Local imports">Import your own React components only when you need them.</Frame>}
   right={<Disclosure title="Theme-provided components">Themes can expose components directly to MDX.</Disclosure>}
 />
+
+You can also import your own React components.
+
+\`\`\`mdx
+import { ExampleCard } from "./ExampleCard.tsx";
+
+# Local import
+
+Use a mix of markdown and components.
+
+<ExampleCard title="Local import">
+  Your own React component.
+</ExampleCard>
+\`\`\`
 
 ---
 
