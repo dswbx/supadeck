@@ -21,10 +21,10 @@
       "smoke:npx": "npm run build && node ./scripts/smoke-npx.mjs",
       "test": "vitest run",
       "typecheck": "tsc -p tsconfig.json",
-      "prepublishOnly": "npm run test && npm run build",
-      "release:patch": "npm version patch && git push && git push origin --tags && npm publish",
-      "release:minor": "npm version minor && git push && git push origin --tags && npm publish",
-      "release:major": "npm version major && git push && git push origin --tags && npm publish"
+      "prerelease": "npm run test && npm run build",
+      "release:patch": "npm run prerelease && npm version patch && git push && git push origin --tags && npm publish",
+      "release:minor": "npm run prerelease && npm version minor && git push && git push origin --tags && npm publish",
+      "release:major": "npm run prerelease && npm version major && git push && git push origin --tags && npm publish"
    },
    "keywords": [
       "mdx",
