@@ -8,7 +8,7 @@ Supadeck is a zero-config presentation toolkit for writing slide decks in MDX. Y
 npx supadeck
 ```
 
-That single command looks for `deck.mdx` in the current directory, creates `deck.mdx` and `ExampleCard.tsx` if they do not exist yet, and starts the local presentation runtime. As you edit the deck or update local components imported from your workspace, the deck reloads immediately.
+That single command looks for `deck.mdx` in the current directory, creates `deck.mdx` if it does not exist yet, and starts the local presentation runtime. As you edit the deck or update local components imported from your workspace, the deck reloads immediately.
 
 ![Sunset theme deck preview](.github/assets/readme/hero-sunset.png)
 
@@ -207,7 +207,7 @@ There are two supported ways to bring custom UI into a deck:
 1. Import local components directly inside `deck.mdx`.
 2. Expose components from a theme via `theme.components`.
 
-The starter workflow uses a local component import:
+One way to bring in your own component is a local import:
 
 ```mdx
 import ExampleCard from "./ExampleCard.tsx";

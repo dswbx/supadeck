@@ -6,8 +6,6 @@ showSlideNumbers: true
 transition: fade
 ---
 
-import ExampleCard from './ExampleCard.tsx'
-
 # Supadeck
 
 Write presentations in one `deck.mdx` file.
@@ -21,7 +19,7 @@ Write presentations in one `deck.mdx` file.
 ## Custom components
 
 <Columns
-  left={<ExampleCard title="Local import">Your own React component.</ExampleCard>}
+  left={<Frame label="Local imports">Import your own React components only when you need them.</Frame>}
   right={<Disclosure title="Theme-provided components">Themes can expose components directly to MDX.</Disclosure>}
 />
 

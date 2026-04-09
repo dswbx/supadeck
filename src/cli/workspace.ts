@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { starterDeckTemplate, starterExampleComponent } from './templates.js';
+import { starterDeckTemplate } from './templates.js';
 
 export function resolveDeckPath(
   input?: string,
@@ -32,8 +32,4 @@ async function writeFileIfMissing(filePath: string, contents: string): Promise<v
 
 export async function ensureStarterDeck(deckPath: string): Promise<void> {
   await writeFileIfMissing(deckPath, starterDeckTemplate());
-  await writeFileIfMissing(
-    path.join(path.dirname(deckPath), 'ExampleCard.tsx'),
-    starterExampleComponent()
-  );
 }
