@@ -18,6 +18,7 @@
       "build": "tsc -p tsconfig.build.json && node ./scripts/copy-static.mjs",
       "dev": "SUPADECK_DEFAULT_INPUT=examples/dev tsx ./src/cli/index.ts",
       "export": "SUPADECK_DEFAULT_INPUT=examples/dev tsx ./src/cli/index.ts export",
+      "smoke:npx": "npm run build && node ./scripts/smoke-npx.mjs",
       "test": "vitest run",
       "typecheck": "tsc -p tsconfig.json",
       "prepublishOnly": "npm run test && npm run build",
