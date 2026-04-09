@@ -1,6 +1,6 @@
 {
    "name": "supadeck",
-   "version": "0.0.7",
+   "version": "0.0.8",
    "description": "Zero-config MDX presentations with hot reload and PDF export.",
    "type": "module",
    "types": "./dist/index.d.ts",
