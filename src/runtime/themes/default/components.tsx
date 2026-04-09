@@ -6,6 +6,36 @@ function cx(...values: Array<string | false | null | undefined>): string {
   return values.filter(Boolean).join(' ');
 }
 
+function toClassName(value: unknown): string | undefined {
+  if (typeof value === 'string') {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    const className = value
+      .flatMap((entry) => (typeof entry === 'string' ? entry.split(/\s+/) : []))
+      .filter(Boolean)
+      .join(' ');
+
+    return className || undefined;
+  }
+
+  return undefined;
+}
+
+function isBlockCode(
+  className: unknown,
+  props: Record<string, unknown>
+): boolean {
+  const normalizedClassName = toClassName(className) ?? '';
+
+  return (
+    'data-code-block' in props ||
+    normalizedClassName.includes('language-') ||
+    normalizedClassName.includes('deck-code-content')
+  );
+}
+
 export interface SupabaseMarkProps extends React.ComponentProps<'svg'> {
   size?: 'footer' | 'hero';
 }
@@ -226,10 +256,17 @@ export function createSupabaseComponents(): MdxComponentMap {
     ),
     li: (props: React.ComponentProps<'li'>) => <li {...props} />,
     code: ({ className, ...props }: React.ComponentProps<'code'>) => (
-      <code className={cx('supabase-inline-code', className)} {...props} />
+      <code
+        className={
+          isBlockCode(className, props)
+            ? toClassName(className)
+            : cx('supabase-inline-code', toClassName(className))
+        }
+        {...props}
+      />
     ),
     pre: ({ className, ...props }: React.ComponentProps<'pre'>) => (
-      <pre className={cx('supabase-pre', className)} {...props} />
+      <pre className={cx('supabase-pre', toClassName(className))} {...props} />
     ),
     table: ({ className, ...props }: React.ComponentProps<'table'>) => (
       <table className={cx('supabase-table', className)} {...props} />

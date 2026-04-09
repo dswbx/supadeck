@@ -452,6 +452,23 @@ tr:last-child td {
    padding: 22px 24px;
 }
 
+.supabase-pre.deck-code-block,
+.supabase-pre.deck-code-block code {
+   background: transparent !important;
+}
+
+.supabase-pre .deck-code-content {
+   display: block;
+   min-width: max-content;
+   font-family: "SF Mono", "Fira Code", "IBM Plex Mono", monospace;
+   font-size: 0.95em;
+   line-height: 1;
+}
+
+.supabase-pre .deck-code-content .line {
+   display: block;
+}
+
 .supabase-pre code {
    background: transparent;
    padding: 0;

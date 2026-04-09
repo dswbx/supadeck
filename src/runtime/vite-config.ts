@@ -8,6 +8,7 @@ import type { HmrContext, InlineConfig, ModuleNode, Plugin } from "vite";
 import { normalizePath } from "vite";
 import remarkGfm from "remark-gfm";
 import { parseDeck } from "../content/parse-deck.js";
+import { rehypeShikiCodeBlocks } from "../content/rehype-shiki-code-blocks.js";
 import { remarkUnwrapJsxParagraphs } from "../content/remark-unwrap-jsx-paragraphs.js";
 import {
    injectTailwindSources,
@@ -299,6 +300,7 @@ export function createSupadeckViteConfig({
          mdx({
             include: [/\.mdx$/, /\.mdx\?.*$/],
             remarkPlugins: [remarkGfm, remarkUnwrapJsxParagraphs],
+            rehypePlugins: [rehypeShikiCodeBlocks],
          }),
          react(),
          tailwindcss(),

@@ -7,6 +7,38 @@ function cx(...values: Array<string | false | null | undefined>): string {
    return values.filter(Boolean).join(" ");
 }
 
+function toClassName(value: unknown): string | undefined {
+   if (typeof value === "string") {
+      return value;
+   }
+
+   if (Array.isArray(value)) {
+      const className = value
+         .flatMap((entry) =>
+            typeof entry === "string" ? entry.split(/\s+/) : []
+         )
+         .filter(Boolean)
+         .join(" ");
+
+      return className || undefined;
+   }
+
+   return undefined;
+}
+
+function isBlockCode(
+   className: unknown,
+   props: Record<string, unknown>
+): boolean {
+   const normalizedClassName = toClassName(className) ?? "";
+
+   return (
+      "data-code-block" in props ||
+      normalizedClassName.includes("language-") ||
+      normalizedClassName.includes("deck-code-content")
+   );
+}
+
 export function createDefaultComponents(): MdxComponentMap {
    return {
       h1: (props: React.ComponentProps<"h1">) => (
@@ -45,15 +77,25 @@ export function createDefaultComponents(): MdxComponentMap {
       li: (props: React.ComponentProps<"li">) => (
          <li className="pl-2" {...props} />
       ),
-      code: (props: React.ComponentProps<"code">) => (
+      code: ({ className, ...props }: React.ComponentProps<"code">) => (
          <code
-            className="rounded-md bg-black/10 px-2 py-1 font-mono text-[0.9em] dark:bg-white/10"
+            className={
+               isBlockCode(className, props)
+                  ? toClassName(className)
+                  : cx(
+                       "rounded-md bg-black/10 px-2 py-1 font-mono text-[0.9em] dark:bg-white/10",
+                       toClassName(className)
+                    )
+            }
             {...props}
          />
       ),
-      pre: (props: React.ComponentProps<"pre">) => (
+      pre: ({ className, ...props }: React.ComponentProps<"pre">) => (
          <pre
-            className="overflow-x-auto rounded-[var(--radius-lg)] border border-[color:var(--color-border)] bg-[color:var(--color-code-bg)] p-6 text-lg"
+            className={cx(
+               "overflow-x-auto rounded-[var(--radius-lg)] border border-[color:var(--color-border)] bg-[color:var(--color-code-bg)] p-6 text-lg",
+               toClassName(className)
+            )}
             {...props}
          />
       ),
