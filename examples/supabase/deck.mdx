@@ -14,10 +14,10 @@ sections:
      end: 6
    - label: Status
      start: 7
-     end: 7
-   - label: Ask
-     start: 8
      end: 8
+   - label: Ask
+     start: 9
+     end: 9
 ---
 
 <Center>
@@ -61,22 +61,16 @@ sections:
 <Divider />
 <CardGrid columns={3}>
    <Card title="For AI builders">
-      <p>
-         Built for local and prototype workflows in tools like Lovable, Bolt,
-         and similar AI-first products.
-      </p>
+      Built for local and prototype workflows in tools like Lovable, Bolt,
+      and similar AI-first products.
    </Card>
    <Card title="~60% feature parity">
-      <p>
-         Enough of the common surface area to build and iterate quickly without
-         chasing edge-case parity.
-      </p>
+      Enough of the common surface area to build and iterate quickly without
+      chasing edge-case parity.
    </Card>
    <Card title="Seamless upgrade">
-      <p>
-         When you are ready for production, moving to Supabase should require no
-         code changes.
-      </p>
+      When you are ready for production, moving to Supabase should require no
+      code changes.
    </Card>
 </CardGrid>
 
@@ -183,11 +177,22 @@ sections:
 
 ---
 
+<Tag tone="yellow">Before you build</Tag>
+
+## Important <em className="text-yellow-400">limitations</em>
+
+* **Studio config is read-only**: Code driven development only
+* **`supabase-js` only**: No direct database access
+* **Data type gaps**: e.g. `BOOLEAN` maps to `INTEGER ... CHECK(0,1)`; `true/false` comparisons currently fail
+* **Cloud demo**: Sign-up requires a `supabase.io` address, email-only.
+
+---
+
 <Center>
-   # The *ask*
+   ## The *ask*
    ***
    
-   <div className="*:list-disc *:list-inside *:text-left">
+   <div className="*:text-left">
    - **Try it** — spin up a project and kick the tyres
    - **Report bugs** — anything that feels off
    - **Suggest features** — what feels missing?

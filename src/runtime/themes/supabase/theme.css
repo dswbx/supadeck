@@ -28,13 +28,15 @@
    --color-background: var(--supabase-background);
 }
 
-em {
-   color: var(--supabase-accent);
-   font-style: normal;
-}
+@layer base {
+   em {
+      color: var(--supabase-accent);
+      font-style: normal;
+   }
 
-b {
-   color: var(--supabase-heading);
+   b {
+      color: var(--supabase-heading);
+   }
 }
 
 *,
@@ -190,9 +192,13 @@ blockquote {
    margin-top: 20px;
 }
 
+.supabase-list {
+   @apply list-disc;
+}
+
 .supabase-list,
 .supabase-list-ordered {
-   padding-left: 1.2em;
+   @apply pl-5;
 }
 
 .supabase-list > li + li,
