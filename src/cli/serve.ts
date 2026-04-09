@@ -1,23 +1,28 @@
-import { createServer } from 'vite';
-import { createSupaslidesViteConfig } from '../runtime/vite-config.js';
+import { createServer } from "vite";
+import { createSupadeckViteConfig } from "../runtime/vite-config.js";
 
 interface RunDevServerOptions {
-  deckPath: string;
-  port?: number;
-  open?: boolean;
-  themeOverride?: string;
+   deckPath: string;
+   port?: number;
+   open?: boolean;
+   themeOverride?: string;
 }
 
-export async function runDevServer({ deckPath, port, open, themeOverride }: RunDevServerOptions) {
-  const server = await createServer(
-    createSupaslidesViteConfig({
-      deckPath,
-      port,
-      open,
-      themeOverride
-    })
-  );
+export async function runDevServer({
+   deckPath,
+   port,
+   open,
+   themeOverride,
+}: RunDevServerOptions) {
+   const server = await createServer(
+      createSupadeckViteConfig({
+         deckPath,
+         port,
+         open,
+         themeOverride,
+      })
+   );
 
-  await server.listen();
-  server.printUrls();
+   await server.listen();
+   server.printUrls();
 }

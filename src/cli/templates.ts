@@ -1,6 +1,6 @@
 export function starterDeckTemplate(): string {
-  return `---
-title: Supaslides
+   return `---
+title: Supadeck
 theme: default
 aspectRatio: 16:9
 showSlideNumbers: true
@@ -9,7 +9,7 @@ transition: fade
 
 import ExampleCard from './ExampleCard.tsx'
 
-# Supaslides
+# Supadeck
 
 Write presentations in one \`deck.mdx\` file.
 
@@ -30,14 +30,14 @@ Write presentations in one \`deck.mdx\` file.
 
 ## Export
 
-- Run \`npx supaslides export\`
+- Run \`npx supadeck export\`
 - The deck is rendered as HTML first
 - Then exported to PDF with headless Chromium
 `;
 }
 
 export function starterExampleComponent(): string {
-  return `import type { ReactNode } from 'react'
+   return `import type { ReactNode } from 'react'
 
 interface ExampleCardProps {
   title: string

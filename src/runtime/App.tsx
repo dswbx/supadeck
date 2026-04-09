@@ -1,10 +1,14 @@
-import React, { useEffect, useMemo } from 'react';
-import type { DeckModule } from '../content/parse-deck.js';
-import { mergeComponents } from './default-components.js';
-import { useCurrentSlide } from './hooks/slides.js';
-import type { ThemeHelpers, ThemeModule } from './theme-types.js';
-import { DefaultDeck } from './themes/default/DefaultDeck.js';
-import { clamp, getHashIndex, parseAspectRatio } from './utils/use-current-slide.js';
+import React, { useEffect, useMemo } from "react";
+import type { DeckModule } from "../content/parse-deck.js";
+import { mergeComponents } from "./default-components.js";
+import { useCurrentSlide } from "./hooks/slides.js";
+import type { ThemeHelpers, ThemeModule } from "./theme-types.js";
+import { DefaultDeck } from "./themes/default/DefaultDeck.js";
+import {
+   clamp,
+   getHashIndex,
+   parseAspectRatio,
+} from "./utils/use-current-slide.js";
 
 interface AppProps {
    deck: DeckModule;
@@ -27,10 +31,10 @@ export function App({ deck, theme }: AppProps) {
    const DeckRenderer = theme.Deck ?? DefaultDeck;
 
    useEffect(() => {
-      document.title = config.title ?? "Supaslides";
-      window.__SUPASLIDES_READY__ = true;
+      document.title = config.title ?? "Supadeck";
+      window.__SUPADECK_READY__ = true;
       return () => {
-         window.__SUPASLIDES_READY__ = false;
+         window.__SUPADECK_READY__ = false;
       };
    }, [config.title]);
 
