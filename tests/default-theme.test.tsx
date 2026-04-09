@@ -2,13 +2,13 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import type { DeckConfig, DeckModule } from '../src/content/parse-deck.js';
-import { SupabaseDeck } from '../src/runtime/themes/supabase/SupabaseDeck.js';
+import { DefaultThemeDeck } from '../src/runtime/themes/default/DefaultThemeDeck.js';
 
 function createDeck(config: Partial<DeckConfig> = {}): DeckModule {
   return {
     config: {
-      title: 'Supabase deck',
-      theme: 'supabase',
+      title: 'Default deck',
+      theme: 'default',
       aspectRatio: '16:9',
       showSlideNumbers: true,
       transition: 'fade',
@@ -40,7 +40,7 @@ const helpers = {
   parseAspectRatio: () => '16 / 9'
 };
 
-describe('SupabaseDeck', () => {
+describe('DefaultThemeDeck', () => {
   it('renders footer breadcrumbs and counter in interactive mode', () => {
     const deck = createDeck({
       sections: [
@@ -50,7 +50,7 @@ describe('SupabaseDeck', () => {
     });
 
     const html = renderToStaticMarkup(
-      <SupabaseDeck
+      <DefaultThemeDeck
         deck={deck}
         config={deck.config}
         slides={deck.slides}
@@ -72,7 +72,7 @@ describe('SupabaseDeck', () => {
     const deck = createDeck();
 
     const html = renderToStaticMarkup(
-      <SupabaseDeck
+      <DefaultThemeDeck
         deck={deck}
         config={deck.config}
         slides={deck.slides}

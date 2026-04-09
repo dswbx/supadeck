@@ -3,7 +3,7 @@ import type { DeckModule } from "../content/parse-deck.js";
 import { mergeComponents } from "./default-components.js";
 import { useCurrentSlide } from "./hooks/slides.js";
 import type { ThemeHelpers, ThemeModule } from "./theme-types.js";
-import { DefaultDeck } from "./themes/default/DefaultDeck.js";
+import { DefaultDeck } from "./themes/base/DefaultDeck.js";
 import {
    clamp,
    getHashIndex,

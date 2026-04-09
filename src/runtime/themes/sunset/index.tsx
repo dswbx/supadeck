@@ -1,6 +1,6 @@
 import type { ThemeModule } from "../../theme-types.js";
 import { createDefaultComponents } from "../../default-components.js";
-import { DefaultDeck } from "../default/DefaultDeck.js";
+import { DefaultDeck } from "../base/DefaultDeck.js";
 import "./theme.css";
 
 const sunsetTheme: ThemeModule = {

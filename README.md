@@ -56,24 +56,22 @@ That single command looks for `deck.mdx` in the current directory, creates `deck
 
 ## Built-in Themes
 
-Supadeck currently ships with three built-in themes:
+Supadeck currently ships with two built-in themes:
 
 | Theme | Best for | What makes it distinct |
 | --- | --- | --- |
-| `default` | General-purpose decks | Clean deck chrome, slide numbers, progress UI, and the default MDX component set. |
-| `sunset` | Brighter keynote-style decks | Reuses the default layout with a warmer visual treatment and color palette. |
-| `supabase` | Branded product or pitch decks | Custom stage layout, footer breadcrumbs, branded components, and optional section navigation. |
+| `default` | Branded product or pitch decks | Custom stage layout, footer breadcrumbs, branded components, and optional section navigation. |
+| `sunset` | Brighter keynote-style decks | Reuses the exported `DefaultDeck` shell with a warmer visual treatment and color palette. |
 
-![Default theme preview](.github/assets/readme/theme-default.png)
+![Default theme preview](.github/assets/readme/theme-supabase.png)
 ![Sunset theme preview](.github/assets/readme/theme-sunset.png)
-![Supabase theme preview](.github/assets/readme/theme-supabase.png)
 
-For the `supabase` theme, `sections` in frontmatter define 1-based inclusive slide ranges. 
+For the `default` theme, `sections` in frontmatter define 1-based inclusive slide ranges. 
 
 ```yaml
 ---
 title: supalite
-theme: supabase
+theme: default
 sections:
   - label: Intro
     start: 1
@@ -281,7 +279,7 @@ theme: ./themes/my-theme
 
 Theme resolution supports:
 
-- Built-in ids like `default`, `sunset`, and `supabase`
+- Built-in ids like `default` and `sunset`
 - Relative theme files like `./my-theme.tsx`
 - Theme directories with an `index.tsx`, `index.ts`, `index.jsx`, or `index.js`
 
@@ -312,7 +310,7 @@ Supadeck also exports a small toolbox for theme authors:
 - `Disclosure`
 - `Frame`
 
-You can use these as building blocks instead of starting every theme from scratch.
+`DefaultDeck` is the reusable base deck shell used by `sunset` and available to custom theme authors as a building block.
 
 ## Exporting to PDF
 
@@ -337,4 +335,4 @@ npx playwright install chromium
 ## Examples
 
 - [`examples/dev/deck.mdx`](examples/dev/deck.mdx)
-- [`examples/supabase/deck.mdx`](examples/supabase/deck.mdx)
+- [`examples/default/deck.mdx`](examples/default/deck.mdx)

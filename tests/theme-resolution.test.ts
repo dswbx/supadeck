@@ -3,6 +3,8 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { mergeComponents } from "../src/runtime/default-components.js";
+import { DefaultDeck } from "../src/runtime/themes/base/DefaultDeck.js";
+import sunsetTheme from "../src/runtime/themes/sunset/index.js";
 import { resolveThemeModulePath } from "../src/runtime/theme-resolution.js";
 
 const tempRoots: string[] = [];
@@ -20,9 +22,17 @@ describe("resolveThemeModulePath", () => {
       expect(resolveThemeModulePath("/tmp/demo/deck.mdx", "default")).toContain(
          "/src/runtime/themes/default/index.tsx"
       );
-      expect(
+      expect(resolveThemeModulePath("/tmp/demo/deck.mdx", "sunset")).toContain(
+         "/src/runtime/themes/sunset/index.tsx"
+      );
+   });
+
+   it("does not keep supabase as a built-in theme id", () => {
+      expect(() =>
          resolveThemeModulePath("/tmp/demo/deck.mdx", "supabase")
-      ).toContain("/src/runtime/themes/supabase/index.tsx");
+      ).toThrow(
+         'Unable to resolve theme "supabase". Use a built-in id, a theme directory, or a .tsx theme file.'
+      );
    });
 
    it("resolves a theme directory to index.tsx", async () => {
@@ -68,5 +78,11 @@ describe("mergeComponents", () => {
       expect(components.Callout).toBeTypeOf("function");
       expect(components.Hero).toBeTypeOf("function");
       expect(components.h1).toBeTypeOf("function");
+   });
+});
+
+describe("sunset theme", () => {
+   it("keeps using the exported base DefaultDeck shell", () => {
+      expect(sunsetTheme.Deck).toBe(DefaultDeck);
    });
 });

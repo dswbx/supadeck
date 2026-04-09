@@ -1,6 +1,6 @@
 import type { DeckSection, DeckModule } from "../../../content/parse-deck.js";
 import type { MdxComponentMap, ThemeDeckProps } from "../../theme-types.js";
-import { SectionSlide, SupabaseMark } from "./components.js";
+import { SupabaseMark } from "./components.js";
 
 function isSectionActive(section: DeckSection, currentIndex: number): boolean {
    return currentIndex >= section.start && currentIndex <= section.end;
@@ -79,7 +79,7 @@ function SlideShell({
    );
 }
 
-export function SupabaseDeck({
+export function DefaultThemeDeck({
    deck,
    config,
    slides,

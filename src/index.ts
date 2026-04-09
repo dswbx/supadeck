@@ -24,6 +24,6 @@ export { DeckChrome } from './runtime/primitives/DeckChrome.js';
 export { DeckNavigation } from './runtime/primitives/DeckNavigation.js';
 export { DeckProgress } from './runtime/primitives/DeckProgress.js';
 export { DeckTitle } from './runtime/primitives/DeckTitle.js';
-export { DefaultDeck } from './runtime/themes/default/DefaultDeck.js';
+export { DefaultDeck } from './runtime/themes/base/DefaultDeck.js';
 export { clamp, getHashIndex, parseAspectRatio } from './runtime/utils/use-current-slide.js';
 export { Callout, Columns, Disclosure, Frame } from './runtime/components/index.js';
