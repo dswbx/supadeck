@@ -1,9 +1,10 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { afterEach, describe, expect, it } from 'vitest';
 import { ensureStarterDeck, resolveDeckPath } from '../src/cli/workspace.js';
-import { parseArguments } from '../src/cli/index.js';
+import { isDirectCliInvocation, parseArguments } from '../src/cli/index.js';
 
 const tempRoots: string[] = [];
 
@@ -61,5 +62,31 @@ describe('parseArguments', () => {
         input: 'talk.mdx'
       }
     });
+  });
+});
+
+describe('isDirectCliInvocation', () => {
+  it('treats an npm-style symlinked bin path as a direct invocation', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'supadeck-cli-entry-'));
+    tempRoots.push(root);
+    const targetPath = path.join(root, 'index.js');
+    const symlinkPath = path.join(root, 'supadeck');
+
+    await fs.writeFile(targetPath, '#!/usr/bin/env node\n', 'utf8');
+    await fs.symlink(targetPath, symlinkPath);
+
+    expect(isDirectCliInvocation(symlinkPath, pathToFileURL(targetPath).href)).toBe(true);
+  });
+
+  it('returns false for a different module path', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'supadeck-cli-entry-'));
+    tempRoots.push(root);
+    const argvPath = path.join(root, 'argv.js');
+    const modulePath = path.join(root, 'module.js');
+
+    await fs.writeFile(argvPath, '', 'utf8');
+    await fs.writeFile(modulePath, '', 'utf8');
+
+    expect(isDirectCliInvocation(argvPath, pathToFileURL(modulePath).href)).toBe(false);
   });
 });

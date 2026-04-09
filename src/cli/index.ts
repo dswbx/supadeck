@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
+import { realpathSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { runDevServer } from "./serve.js";
 import { runExport } from "./export.js";
 import { ensureStarterDeck, resolveDeckPath } from "./workspace.js";
@@ -100,6 +101,21 @@ export function parseArguments(argv: string[]): ParsedArguments {
    return { command, options };
 }
 
+export function isDirectCliInvocation(
+   argvEntry = process.argv[1],
+   moduleUrl = import.meta.url
+): boolean {
+   if (!argvEntry) {
+      return false;
+   }
+
+   try {
+      return realpathSync(argvEntry) === realpathSync(fileURLToPath(moduleUrl));
+   } catch {
+      return pathToFileURL(argvEntry).href === moduleUrl;
+   }
+}
+
 async function main(): Promise<void> {
    const { command, options } = parseArguments(process.argv.slice(2));
    const deckPath = resolveDeckPath(
@@ -134,10 +150,7 @@ async function main(): Promise<void> {
    });
 }
 
-if (
-   process.argv[1] &&
-   pathToFileURL(process.argv[1]).href === import.meta.url
-) {
+if (isDirectCliInvocation()) {
    main().catch((error) => {
       console.error(
          `\n[supadeck] ${

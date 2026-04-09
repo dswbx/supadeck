@@ -19,7 +19,11 @@
       "dev": "SUPADECK_DEFAULT_INPUT=examples/dev tsx ./src/cli/index.ts",
       "export": "SUPADECK_DEFAULT_INPUT=examples/dev tsx ./src/cli/index.ts export",
       "test": "vitest run",
-      "typecheck": "tsc -p tsconfig.json"
+      "typecheck": "tsc -p tsconfig.json",
+      "prepublishOnly": "npm run test && npm run build",
+      "release:patch": "npm version patch && git push && git push origin --tags && npm publish",
+      "release:minor": "npm version minor && git push && git push origin --tags && npm publish",
+      "release:major": "npm version major && git push && git push origin --tags && npm publish"
    },
    "keywords": [
       "mdx",
