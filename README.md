@@ -10,7 +10,7 @@ npx supadeck
 
 That single command looks for `deck.mdx` in the current directory, creates `deck.mdx` if it does not exist yet, and starts the local presentation runtime. As you edit the deck or update local components imported from your workspace, the deck reloads immediately.
 
-![Sunset theme deck preview](.github/assets/readme/hero-sunset.png)
+![Default theme preview](.github/assets/readme/theme-supabase.png)
 
 ## Why Supadeck
 
